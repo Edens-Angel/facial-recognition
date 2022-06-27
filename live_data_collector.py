@@ -1,8 +1,6 @@
 import cv2
 import os
-from util import draw_rectangle
-
-cap = cv2.VideoCapture(0)
+from util import numberic_reorder_dir, draw_rectangle
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -18,11 +16,19 @@ path = os.path.join(BASE_DIR, 'images', 'collected_data', name)
 isExistingPath = os.path.exists(path)
 
 if isExistingPath:
-    print('Name exists already! Try again...')
-    name = str(input("Enter your name:")).lower()   
+    sorted_dir = numberic_reorder_dir(path)
+    isEmpty = len(sorted_dir) == 0
+    print(sorted_dir)
+    
+    if not isEmpty:
+        last_item = int(sorted_dir[-1].split('.')[0])
+        starting_number = last_item + 1
 else:
     os.makedirs(path)
     
+
+cap = cv2.VideoCapture(0)
+
 while True:
     ret, video = cap.read()
     
@@ -32,7 +38,6 @@ while True:
         picture_name = os.path.join(BASE_DIR, 'images', 'collected_data', name, str(count) + '.jpg')
         cv2.imwrite(picture_name, video[y:y + h, x:x + w])
         count += 1
-        print(count)
         draw_rectangle(video, x, y, w, h)
     
     cv2.imshow('data collecting...', video)
