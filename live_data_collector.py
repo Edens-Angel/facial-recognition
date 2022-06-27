@@ -1,8 +1,6 @@
-from tkinter import Y
 import cv2
 import os
-
-from cv2 import imwrite
+from util import draw_rectangle
 
 cap = cv2.VideoCapture(0)
 
@@ -26,14 +24,16 @@ else:
     os.makedirs(path)
     
 while True:
-    ret, video = video.read()
+    ret, video = cap.read()
     
     faces = haar_model.detectMultiScale(video, scaleFactor=1.2, minNeighbors=5)
 
     for (x, y, w, h) in faces:
-        picture_name = os.path.join(BASE_DIR, 'images', 'collected_data', name, count + '.jpg')
+        picture_name = os.path.join(BASE_DIR, 'images', 'collected_data', name, str(count) + '.jpg')
         cv2.imwrite(picture_name, video[y:y + h, x:x + w])
         count += 1
+        print(count)
+        draw_rectangle(video, x, y, w, h)
     
     cv2.imshow('data collecting...', video)
 

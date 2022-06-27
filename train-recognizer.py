@@ -3,7 +3,6 @@ import numpy as np
 from PIL import Image
 import cv2
 import pickle
-# from deepface import DeepFace
 
 def label_faces(label_name, labels = {}):
     if label_name in labels:
@@ -19,7 +18,7 @@ def label_faces(label_name, labels = {}):
     return labels
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-img_dir = os.path.join(BASE_DIR, 'images', 'train_images')
+img_dir = os.path.join(BASE_DIR, 'images', 'collected_data')
 
 frontal_face_model = 'haarcascade_frontalface.xml'
 haar_model = cv2.CascadeClassifier(os.path.join(BASE_DIR, 'classifiers', 'haar', frontal_face_model))
@@ -50,10 +49,9 @@ for root, dirs, files in os.walk(img_dir):
             image_array = np.array(resized_image, np.uint8)
             
             faces = haar_model.detectMultiScale(image_array, scaleFactor=1.2, minNeighbors=5)
-            
-            for k, (x, y, w, h) in enumerate(faces):
+            print(label_name, file)
+            for (x, y, w, h) in faces:
                 roi = image_array[y:y+h, x:x+w]
-                Image.fromarray(roi).save(f'{k}_saved_img.png')
                 x_train.append(roi)
                 y_train.append(current_id)
 
@@ -62,14 +60,3 @@ with open(os.path.join(BASE_DIR, 'recognizer', 'labels.pickle'), 'wb') as f:
 
 recognizer.train(x_train, np.array(y_train))
 recognizer.save(os.path.join(BASE_DIR, 'recognizer', 'trained_model.yml'))
-
-# DeepFace.build_model('deepface_model')
-folder = os.path.join(BASE_DIR, 'images', 'train_images', 'paul')
-img1 = os.path.join(BASE_DIR, 'images', 'train_images', 'paul', '7.JPG')
-img2 = os.path.join(BASE_DIR, 'images', 'train_images', 'paul', '8.JPG')
-img_f = os.path.join(BASE_DIR, 'images', 'train_images', 'ana', '2.jpeg')
-
-
-# DeepFace.verify(img1, img2, enforce_detection=False)
-# model = DeepFace.build_model('VGG-Face')
-# DeepFace.analyze(img_f, enforce_detection=False)
