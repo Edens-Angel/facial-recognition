@@ -25,8 +25,8 @@ haar_eye = 'haarcascade_eye.xml'
 labels = load_labels(os.path.join(BASE_DIR, 'recognizer', 'labels.pickle'))
 
 face_model = cv2.CascadeClassifier(os.path.join(BASE_DIR, 'classifiers', 'haar', haar_frontal_face))
-smile_model = cv2.CascadeClassifier(os.path.join(BASE_DIR, 'classifiers', 'haar', haar_smile))
-eye_model = cv2.CascadeClassifier(os.path.join(BASE_DIR, 'classifiers', 'haar', haar_eye))
+# smile_model = cv2.CascadeClassifier(os.path.join(BASE_DIR, 'classifiers', 'haar', haar_smile))
+# eye_model = cv2.CascadeClassifier(os.path.join(BASE_DIR, 'classifiers', 'haar', haar_eye))
 
 
 recognizer = cv2.face.LBPHFaceRecognizer_create() # could be a trained model
@@ -43,7 +43,6 @@ while True:
 
         faces = face_model.detectMultiScale(img_gray, scaleFactor=1.2, minNeighbors=5)
 
-        eye = eye_model.detectMultiScale(img_gray, scaleFactor=1.2, minNeighbors=5)
         for (x, y, w, h) in faces:
             roi_color = img[y:y+h, x:x+w]
             roi_gray = img_gray[y:y+h, x:x+w]
@@ -57,9 +56,6 @@ while True:
                 color = (255, 255, 255)
                 cv2.putText(img, name, (x, y - 5), font, 1, color, 2, cv2.LINE_AA)
                 draw_rectangle(img, x, y, w, h, (0, 0, 255))
-
-        for (x, y, w, h) in eye:
-            draw_rectangle(img, x, y, w, h, (0, 255, 0))
 
         cv2.imshow('mamica', img)
 
