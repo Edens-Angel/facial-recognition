@@ -42,12 +42,14 @@ while True:
 
             # Recognizer who it is
             id, accuracy = recognizer.predict(roi_gray)
-            print(id)
+            print(accuracy)
             if (accuracy > 40 and accuracy < 100):
                 font = cv2.FONT_HERSHEY_COMPLEX
                 name = labels[id]
                 color = (255, 255, 255)
                 cv2.putText(img, name, (x, y - 5), font, 1, color, 2, cv2.LINE_AA)
+                cv2.putText(img, str(accuracy).split('.')[0], (x + w, y - 5), font, 1, color, 2, cv2.LINE_AA)
+                # cv2.putText(img, accuracy, (x + w, y - 5), font, 1, color, 2, cv2.LINE_AA)
                 draw_rectangle(img, x, y, w, h, (0, 0, 255))
 
         cv2.imshow('mamica', img)
